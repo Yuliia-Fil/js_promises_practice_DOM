@@ -10,54 +10,71 @@ const firstPromise = new Promise((resolve, reject) => {
     }
   }, 3000);
 
-  document.addEventListener('click', () => {
+  function clickFunc1() {
     notClicked = false;
     resolve('First promise was resolved');
-  });
+    document.removeEventListener('click', clickFunc1);
+  }
+
+  document.addEventListener('click', clickFunc1);
 });
 
 const secondPromise = new Promise((resolve) => {
   let leftClick = false;
   let rightClick = false;
 
-  document.addEventListener('click', () => {
+  function clickFunc2() {
     leftClick = true;
 
     if (leftClick || rightClick) {
       resolve('Second promise was resolved');
     }
-  });
+    document.removeEventListener('click', clickFunc2);
+    document.removeEventListener('contextmenu', contextmenuFunc2);
+  }
 
-  document.addEventListener('contextmenu', (e) => {
+  function contextmenuFunc2(e) {
     e.preventDefault();
     rightClick = true;
 
     if (leftClick || rightClick) {
       resolve('Second promise was resolved');
     }
-  });
+    document.removeEventListener('click', clickFunc2);
+    document.removeEventListener('contextmenu', contextmenuFunc2);
+  }
+
+  document.addEventListener('click', clickFunc2);
+  document.addEventListener('contextmenu', contextmenuFunc2);
 });
 
 const thirdPromise = new Promise((resolve) => {
   let leftClick = false;
   let rightClick = false;
 
-  document.addEventListener('click', () => {
+  function clickFunc3() {
     leftClick = true;
 
     if (leftClick && rightClick) {
       resolve('Third promise was resolved');
+      document.removeEventListener('click', clickFunc3);
+      document.removeEventListener('contextmenu', contextmenuFunc3);
     }
-  });
+  }
 
-  document.addEventListener('contextmenu', (e) => {
+  function contextmenuFunc3(e) {
     e.preventDefault();
     rightClick = true;
 
     if (leftClick && rightClick) {
       resolve('Third promise was resolved');
+      document.removeEventListener('click', clickFunc3);
+      document.removeEventListener('contextmenu', contextmenuFunc3);
     }
-  });
+  }
+
+  document.addEventListener('click', clickFunc3);
+  document.addEventListener('contextmenu', contextmenuFunc3);
 });
 
 function successHandler(successMessage) {
